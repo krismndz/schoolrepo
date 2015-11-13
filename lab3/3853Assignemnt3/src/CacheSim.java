@@ -131,7 +131,7 @@ public class CacheSim {
 				SAC sac = new SAC(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
 			
 			}
-			this.printTest();
+			//this.printTest();
 		}
 		this.setTagSize();
 		this.printTest();
