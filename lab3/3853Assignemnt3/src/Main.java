@@ -20,8 +20,10 @@ public class Main {
 		int p = 0;
 		String policy = "fifo";
 		String flag="on";
-		String file = "/Users/kristinmendoza/git/schoolrepo/lab3/3853Assignemnt3/src/memory-small.txt";
-		CacheSim cache = new CacheSim(n,m,p,policy,flag,file);
+		
+		//String file = "/Users/kristinmendoza/git/schoolrepo/lab3/3853Assignemnt3/src/memory-small.txt";
+		//String file="/home/srobbins/cs3853/";
+		//CacheSim cache = new CacheSim(n,m,p,policy,flag,file);
 		
 	}
 

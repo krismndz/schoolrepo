@@ -109,7 +109,7 @@ public class CacheSim {
 			//DMC dmc = new DMC(log2CacheSize,log2blockSize,tf,fp);
 		}else {
 				
-			if((p<0) ||(p>chkFulAssoc) ){
+			if((p<0) ||(p>=chkFulAssoc) ){
 				setTotal=blockCount;
 				indexSz=0;
 		
