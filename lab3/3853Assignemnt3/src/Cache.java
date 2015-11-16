@@ -77,12 +77,111 @@ public class Cache {
 		offsetSz=CacheSim.getOffsetBits();
 		tagSz=CacheSim.getTagBits();
 		indexSz=CacheSim.getIndexBits();
+	
 		filePath =CacheSim.getFilePath();
 		data=CacheSim.getData();
 		accessCount=data.length;
-		this.initializeCache();
-		this.runSimulation();
+		if(indexSz==0){
+			this.initializeFullyAssociativeCache();
+		}else{
+			this.initializeCache();
+		}
+		
+		if(indexSz==0){
+		//	System.out.println("Index size is 0");
+			this.runFullyAssociativeSimulatio();
+		}else{
+			this.runSimulation();
+		}
+		
 		this.printEnd();
+	}
+	
+	public void runFullyAssociativeSimulatio(){
+		for(int i =0; i < data.length;i++){
+			
+			int time = i+1;
+			str = data[i].toCharArray();
+		
+			
+			
+			//convert hex string to binary string of length 32
+			String bin=Integer.toBinaryString(Integer.parseInt(data[i], 16));
+			int n = bin.length();
+			int insert = 32 - n;
+			char [] ins = new char[insert];
+			Arrays.fill(ins, '0');
+			
+			binaryString = new String(ins)+bin;
+		
+			
+			//set binary values into indexbinary, tagbinary and offsetbinary
+			this.setBinaryValues();
+			
+			//set values in decimal 
+			this.setDecimalValues();
+	
+			//set values in hex
+			this.setHexValues();
+			
+			//add binary values to array list
+			tagBinaryList.add(tagbinary);
+		
+			offsetBinaryList.add(offsetbinary);
+			String address = tagbinary;
+		//	System.out.println(tagbinary+" Length:"+tagbinary.length());
+			
+			int addressInt = Integer.parseInt(address,2);
+			
+			//int setNum=addressInt%setCount;
+		//	System.out.println("Set count:" +Integer.toString(setCount));
+			boolean hm=false;
+			boolean hasEmpty=false;
+			for(int j = 0; j < setCount; j++){
+
+				if(cache.get(j).get(0)[0][0].equals(taghex)){
+					if(policy.equals("lru")){
+						cache.get(j).get(0)[0][1]=Integer.toString(time);
+					}
+					
+					hm=true;
+					break;
+				}
+			}
+			if(hm==false){
+				misses++;
+				for(int j =0; j < setCount; j++){
+					if(cache.get(j).get(0)[0][0].equals("-1")){
+						hasEmpty=true;
+						cache.get(j).get(0)[0][0]=taghex;
+						cache.get(j).get(0)[0][1]=Integer.toString(time);
+						break;
+					}
+				}
+				if(hasEmpty==false){
+					int min =9999999;
+					int replace=-1;
+					for(int j = 0; j < setCount; j++){
+	
+						if(Integer.parseInt(cache.get(j).get(0)[0][1])<min){
+							min=Integer.parseInt(cache.get(j).get(0)[0][1]);
+							replace = j;
+						}
+					}
+					cache.get(replace).get(0)[0][0]=taghex;
+					cache.get(replace).get(0)[0][1]=Integer.toString(time);
+				
+				}
+			}else{
+				hits++;
+			}
+			missratio=(((double)misses)/(double)(i+1));
+	
+			if(trace==true){
+				
+			}
+			
+		}
 	}
 	
 	public void runSimulation(){
@@ -179,6 +278,30 @@ public class Cache {
 		System.out.printf("Miss Ratio: %s\n",String.format("%.8g",missratio));
 		
 	}
+	
+	public void initializeFullyAssociativeCache(){
+		
+		int n = 80;
+		//int n = 999999;
+		/**if(n < accessCount){
+			//n = accessCount;
+		}**/
+		
+		
+		//for(int i = 0; i < accessCount; i++){
+		for(int i = 0; i < setCount; i++){
+			LinkedList<String[][]>set = new LinkedList<String[][]>();
+	
+				String[][] block= new String[1][2];
+				for (int j = 0; j < 2; j++){
+					
+					block[0][j]="-1";
+				}
+				set.add(block);
+			
+			cache.add(set);
+		}
+	}
 	public void initializeCache(){
 	//cache= new String[accessCount][2];
 		
@@ -223,13 +346,19 @@ public class Cache {
 	
 	public void setDecimalValues(){
 		tagdec = Integer.parseInt(tagbinary,2);
-		indexdec = Integer.parseInt(indexbinary,2);
+		if(indexSz!=0){
+			indexdec = Integer.parseInt(indexbinary,2);
+		}
+
 		offsetdec = Integer.parseInt(offsetbinary,2);
 	}
 	
 	public void setHexValues(){
 		taghex = Integer.toString(tagdec,16);
-		indexhex = Integer.toString(indexdec,16);
+		if(indexSz!=0){
+			indexhex = Integer.toString(indexdec,16);
+		}
+	
 		offsethex = Integer.toString(offsetdec,16);
 	}
 	public void setLru(){

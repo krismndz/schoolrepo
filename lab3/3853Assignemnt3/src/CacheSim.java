@@ -102,36 +102,22 @@ public class CacheSim {
 		//the same no matter what
 		this.setOffsetSize(log2blockSize);
 		
-		if(policy.equals("lru")){
-			this.setLruDigits(assoc);
-		}
-		else if(policy.equals("fifo")){
-			
-		}
+		
 		if(p==0){
 			this.setIndexSize();
 			//DMC dmc = new DMC(log2CacheSize,log2blockSize,tf,fp);
 		}else {
-			
-			
-			
-			
-			
+				
 			if((p<0) ||(p>chkFulAssoc) ){
 				setTotal=blockCount;
 				indexSz=0;
 		
-				///FAC fac = new FAC(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
 			}else{
 				
 				this.setSetCount();
 				this.setIndexSize();
-				
-			
-				//LRU LRU = new LRU(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
-			
 			}
-			//this.printTest();
+
 		}
 		this.setTagSize();
 		
@@ -139,8 +125,8 @@ public class CacheSim {
 			DMC dmc = new DMC(log2CacheSize,log2blockSize,tf,fp);
 		}else {
 
-			
-			if((p<0) ||(p>chkFulAssoc) ){
+			Cache lru = new Cache(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
+			/**if((p<0) ||(p>chkFulAssoc) ){
 				FAC fac = new FAC(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
 			}else{
 			
@@ -149,7 +135,7 @@ public class CacheSim {
 				
 
 			
-			}
+			}**/
 			
 		}
 		
