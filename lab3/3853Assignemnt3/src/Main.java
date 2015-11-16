@@ -18,7 +18,7 @@ public class Main {
 		int n = 16;
 		int m = 6;
 		int p = 2;
-		String policy = "lru";
+		String policy = "fifo";
 		String flag="on";
 		String file = "/Users/kristinmendoza/git/schoolrepo/lab3/3853Assignemnt3/src/testfile2.txt";
 		CacheSim cache = new CacheSim(n,m,p,policy,flag,file);

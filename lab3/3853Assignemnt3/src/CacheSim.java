@@ -143,13 +143,10 @@ public class CacheSim {
 			if((p<0) ||(p>chkFulAssoc) ){
 				FAC fac = new FAC(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
 			}else{
-				if(policy.equals("lru")){
+			
 
-					LRU lru = new LRU(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
-				}
-				else if(policy.equals("fifo")){
-					FIFO fifo = new FIFO(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
-				}
+					Cache lru = new Cache(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
+				
 
 			
 			}

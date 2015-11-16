@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.lang.*;
 import java.io.BufferedReader;
-public class FIFO {
+public class Cache {
 	public static int SZ =1024;
 	public int cacheSzK;
 	public int cacheSz;
@@ -59,7 +59,7 @@ public class FIFO {
 //	public String everything;
 	public static LinkedList<String> activeQueue;
 	public static ArrayList<LinkedList<String[][]>>cache;
-	public FIFO(int log2CacheSize, int log2blockSize,int p,String pol, String tf, String fp){
+	public Cache(int log2CacheSize, int log2blockSize,int p,String pol, String tf, String fp){
 		cache=new ArrayList<LinkedList<String[][]>>();
 		tagBinaryList = new ArrayList<String>();
 		indexBinaryList = new ArrayList<String>();
@@ -121,18 +121,16 @@ public class FIFO {
 			int addressInt = Integer.parseInt(address,2);
 			
 			int setNum=addressInt%setCount;
-			//get the right set
-			LinkedList<String[][]> set=cache.get(setNum);
-			
-			int missPerSet=0;
+		
 			boolean hm=false;
 			boolean hasEmpty=false;
 			for(int j = 0; j < assoc; j++){
-				//System.out.println("Current Value: "+cache.get(setNum).get(j)[0][0]);
-				//System.out.println("Current Time: "+cache.get(setNum).get(j)[0][1]);
+
 				if(cache.get(setNum).get(j)[0][0].equals(taghex)){
-					System.out.println("Hit equals true");
-					cache.get(setNum).get(j)[0][1]=Integer.toString(time);
+					if(policy.equals("lru")){
+						cache.get(setNum).get(j)[0][1]=Integer.toString(time);
+					}
+					
 					hm=true;
 					break;
 				}
@@ -151,8 +149,7 @@ public class FIFO {
 					int min =9999999;
 					int replace=-1;
 					for(int j = 0; j < assoc; j++){
-						//System.out.println("Current Value: "+cache.get(setNum).get(j)[0][0]);
-						//System.out.println("Current Time: "+cache.get(setNum).get(j)[0][1]);
+	
 						if(Integer.parseInt(cache.get(setNum).get(j)[0][1])<min){
 							min=Integer.parseInt(cache.get(setNum).get(j)[0][1]);
 							replace = j;
@@ -160,18 +157,15 @@ public class FIFO {
 					}
 					cache.get(setNum).get(replace)[0][0]=taghex;
 					cache.get(setNum).get(replace)[0][1]=Integer.toString(time);
-					System.out.println("Replace index: "+ Integer.toString(replace));
+				
 				}
 			}else{
 				hits++;
 			}
 			missratio=(((double)misses)/(double)(i+1));
-			
-			
-			if(hm==true){
-				System.out.println("HIT");
-			}else{
-				System.out.println("MISS");
+	
+			if(trace==true){
+				
 			}
 			
 			
