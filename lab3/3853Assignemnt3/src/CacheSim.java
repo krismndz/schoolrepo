@@ -128,7 +128,7 @@ public class CacheSim {
 				this.setIndexSize();
 				
 			
-				//SAC sac = new SAC(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
+				//LRU LRU = new LRU(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
 			
 			}
 			//this.printTest();
@@ -143,9 +143,14 @@ public class CacheSim {
 			if((p<0) ||(p>chkFulAssoc) ){
 				FAC fac = new FAC(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
 			}else{
-				
+				if(policy.equals("lru")){
 
-				SAC sac = new SAC(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
+					LRU lru = new LRU(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
+				}
+				else if(policy.equals("fifo")){
+					FIFO fifo = new FIFO(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
+				}
+
 			
 			}
 			

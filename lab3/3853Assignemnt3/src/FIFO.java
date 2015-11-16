@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.lang.*;
 import java.io.BufferedReader;
-public class SAC {
+public class FIFO {
 	public static int SZ =1024;
 	public int cacheSzK;
 	public int cacheSz;
@@ -59,7 +59,7 @@ public class SAC {
 //	public String everything;
 	public static LinkedList<String> activeQueue;
 	public static ArrayList<LinkedList<String[][]>>cache;
-	public SAC(int log2CacheSize, int log2blockSize,int p,String pol, String tf, String fp){
+	public FIFO(int log2CacheSize, int log2blockSize,int p,String pol, String tf, String fp){
 		cache=new ArrayList<LinkedList<String[][]>>();
 		tagBinaryList = new ArrayList<String>();
 		indexBinaryList = new ArrayList<String>();
@@ -120,7 +120,7 @@ public class SAC {
 			
 			int addressInt = Integer.parseInt(address,2);
 			
-			int setNum=addressInt%assoc;
+			int setNum=addressInt%setCount;
 			//get the right set
 			LinkedList<String[][]> set=cache.get(setNum);
 			
@@ -165,100 +165,8 @@ public class SAC {
 			}else{
 				hits++;
 			}
-			missratio=(((double)misses)/(i+1));
-			/**
-			for(int j = 0; j < assoc; j ++){
-		
-				if(cache.get(setNum).get(j)[0][0].equals("-1")){
-					missPerSet++;
-				}
-				
-			}
-			//if all blocks are filled
-			if((missPerSet==0)&&(missPerSet!=assoc)){
-				System.out.println("Written to all blocks");
+			missratio=(((double)misses)/(double)(i+1));
 			
-				System.out.println("Full Set: Implement policy");
-				for(int j = 0; j < assoc; j ++){
-					//System.out.println("Set: "+ Integer.toString(setNum)+" Block: "+Integer.toString(j+1));
-				
-						//System.out.println("Current Index: "+cache.get(setNum).get(j)[0][0]+" Current Time: "+cache.get(setNum).get(j)[0][1]);
-						if(cache.get(setNum).get(j)[0][0].equals(indexhex)){
-							hm=true;
-		
-							hits++;
-							cache.get(setNum).get(j)[0][1]=Integer.toString(time);
-							break;
-						}
-				}
-				if(hm==false){
-					misses++;
-					int min =9999999;
-					int replace=-1;
-					for(int j = 0; j < assoc; j++){
-						if(Integer.parseInt(cache.get(setNum).get(j)[0][1])<min){
-							replace = j;
-						}
-					}
-					cache.get(setNum).get(replace)[0][0]=indexhex;
-					cache.get(setNum).get(replace)[0][1]=Integer.toString(time);
-					System.out.println("Replace index: "+ Integer.toString(replace));
-				}
-				else{
-					System.out.println("No replacement needed");
-				}
-				
-
-			}//end if all blocks are filled.
-			//if not all blocks are filled
-			else if((missPerSet!=assoc)&&(missPerSet!=0)){
-				//if not all blocks are empty
-
-			
-				for(int j = 0;j < assoc; j++){
-					if(cache.get(setNum).get(j)[0][0].equals(indexhex)){
-					
-						hits++;
-						hm=true;
-						cache.get(setNum).get(j)[0][1]=Integer.toString(time);
-						break;
-					}
-				}
-				if(hm==false){
-					misses ++;
-					for(int j = 0;j < assoc; j++){
-						if(cache.get(setNum).get(j)[0][0].equals("-1")){
-							cache.get(setNum).get(j)[0][0]=indexhex;
-							cache.get(setNum).get(j)[0][1]=Integer.toString(time);
-						//	System.out.println("Wrote to empty block");
-							break;
-						}
-					}
-				}
-					
-	
-			
-			}//end if not all blocks are filled
-			else if(missPerSet==assoc){
-				
-				misses ++;
-				cache.get(setNum).get(0)[0][0]=indexhex;
-				cache.get(setNum).get(0)[0][1]=Integer.toString(time);
-				System.out.println("Wrote to empty block");
-			}
-			/**for(int j = 0; j < assoc; j ++){
-				String accessIndex=set.get(j)[0][0];
-				if(accessIndex.equals(indexhex)){
-					hits++;
-					if(policy.equals("lru")){
-						cache.get(setNum).get(j)[0][1]=Integer.toString(i);
-					}
-					break;
-				}
-				else{
-					//missPerSet++;
-				}
-			}**/
 			
 			if(hm==true){
 				System.out.println("HIT");
