@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.math.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -41,7 +42,8 @@ public class Cache {
 	public String tagbinary;
 	public String indexbinary;
 	public String offsetbinary;
-
+public int log2CacheSz;
+public int log2blockSz;
 	public boolean out;
 	public int tagdec;
 	public int currlast;
@@ -57,9 +59,12 @@ public class Cache {
 	public String policy;
 	public int setCount;
 //	public String everything;
+	public int pval;
 	public static LinkedList<String> activeQueue;
 	public static ArrayList<LinkedList<String[][]>>cache;
 	public Cache(int log2CacheSize, int log2blockSize,int p,String pol, String tf, String fp){
+		log2CacheSz=log2CacheSize;
+		log2blockSz=log2blockSize;
 		cache=new ArrayList<LinkedList<String[][]>>();
 		tagBinaryList = new ArrayList<String>();
 		indexBinaryList = new ArrayList<String>();
@@ -69,6 +74,7 @@ public class Cache {
 
 		traceflag = tf;
 		out = false;
+		pval=p;
 		last = 0;
 		currlast = 0;
 		setCount=CacheSim.getSetCount();
@@ -77,7 +83,11 @@ public class Cache {
 		offsetSz=CacheSim.getOffsetBits();
 		tagSz=CacheSim.getTagBits();
 		indexSz=CacheSim.getIndexBits();
-	
+		trace=CacheSim.getTrace();
+		
+		if(trace){
+			System.out.println("address	tag	set	h/m	hits	misses	accesses	miss ratio	tags");
+		}
 		filePath =CacheSim.getFilePath();
 		data=CacheSim.getData();
 		accessCount=data.length;
@@ -134,6 +144,7 @@ public class Cache {
 			int addressInt = Integer.parseInt(address,2);
 			
 			//int setNum=addressInt%setCount;
+			int setNum=0;
 		//	System.out.println("Set count:" +Integer.toString(setCount));
 			boolean hm=false;
 			boolean hasEmpty=false;
@@ -145,6 +156,7 @@ public class Cache {
 					}
 					
 					hm=true;
+					//setNum=j;
 					break;
 				}
 			}
@@ -155,6 +167,7 @@ public class Cache {
 						hasEmpty=true;
 						cache.get(j).get(0)[0][0]=taghex;
 						cache.get(j).get(0)[0][1]=Integer.toString(time);
+						//setNum=j;
 						break;
 					}
 				}
@@ -168,6 +181,7 @@ public class Cache {
 							replace = j;
 						}
 					}
+				
 					cache.get(replace).get(0)[0][0]=taghex;
 					cache.get(replace).get(0)[0][1]=Integer.toString(time);
 				
@@ -177,10 +191,59 @@ public class Cache {
 			}
 			missratio=(((double)misses)/(double)(i+1));
 	
-			if(trace==true){
+			if(trace){
+				ArrayList<Integer>sortme=new ArrayList<Integer>();
 				
+				ArrayList<LinkedList<String[][]>>sorted=new ArrayList<LinkedList<String[][]>>();
+				System.out.printf("%4s",data[i]);
+				System.out.printf("%6s",taghex);
+				System.out.printf("%8d",setNum);
+				if(hm){
+					System.out.printf("%8s","hit");
+				}else{
+					System.out.printf("%8s","miss");
+				}
+				
+				
+
+				System.out.printf("%9d",hits);
+				System.out.printf("%10d",misses);
+				System.out.printf("%10d",i+1);
+				System.out.printf("%18s",String.format("%.8g",missratio));
+				System.out.print("      ");
+				
+				for(int j =0; j < setCount; j++){
+					if(!cache.get(j).get(0)[0][0].equals("-1")){
+					
+						int decval = hex2decimal(cache.get(j).get(0)[0][0]);
+						Integer[][]add=new Integer[1][2];
+						add[0][0]=decval;
+						add[0][1]=j;
+						//sorted.add(add);
+						sortme.add(decval);
+					}
+				}
+				Collections.sort(sortme);
+				for(int j = 0; j < sortme.size(); j++){
+					for(int k=0; k<setCount; k++){
+						if(!cache.get(j).get(0)[0][0].equals("-1")){
+							if(hex2decimal(cache.get(k).get(0)[0][0])==sortme.get(j)){
+								sorted.add(cache.get(k));
+							}	
+						}
+					}
+					
+				}
+				for(int j =0; j < sorted.size(); j++){
+					if(j>0){
+						System.out.print(", ");
+					}
+					
+					System.out.printf("%s(%s)",sorted.get(j).get(0)[0][0],sorted.get(j).get(0)[0][1]);
+				}
+				System.out.println();
+				//System.out.println("address	tag	set	h/m	hits	misses	accesses	miss ratio	tags");
 			}
-			
 		}
 	}
 	
@@ -263,19 +326,93 @@ public class Cache {
 			}
 			missratio=(((double)misses)/(double)(i+1));
 	
-			if(trace==true){
+			if(trace){
 				
-			}
+ArrayList<Integer>sortme=new ArrayList<Integer>();
+				
+				ArrayList<String[][]>sorted=new ArrayList<String[][]>();
+				System.out.printf("%4s",data[i]);
+				System.out.printf("%6s",taghex);
+				System.out.printf("%8d",setNum);
+				if(hm){
+					System.out.printf("%8s","HIT");
+				}else{
+					System.out.printf("%8s","MISS");
+				}
+				//System.out.printf("%8s",indexhex);
 			
+				/**try{
+					if(!cache[indexdec][0].equals("-1")){
+						System.out.printf("%8s",cache[indexdec][0]);
+					}else{
+						System.out.printf("        ");
+	
+					}
+				}catch(ArrayIndexOutOfBoundsException e){
+					System.out.printf("        ");
+
+				}**/
+				
+
+				System.out.printf("%9d",hits);
+				System.out.printf("%10d",misses);
+				System.out.printf("%10d",i+1);
+				System.out.printf("%18s",String.format("%.8g",missratio));
+				System.out.print("      ");
+				/**for(int j =0; j < assoc; j++){
+					if(!cache.get(setNum).get(j)[0][0].equals("-1")){
+						if(j>0){
+							System.out.print(", ");
+						}
+						System.out.printf("%s(%s)",cache.get(setNum).get(j)[0][0],cache.get(setNum).get(j)[0][1]);
+						
+					}
+				}**/
+				
+				for(int j =0; j <assoc; j++){
+					if(!cache.get(setNum).get(j)[0][0].equals("-1")){
+					
+						int decval = hex2decimal(cache.get(setNum).get(j)[0][0]);
+					
+						sortme.add(decval);
+					}
+				}
+				Collections.sort(sortme);
+				for(int j = 0; j < sortme.size(); j++){
+					for(int k=0; k<assoc; k++){
+						if(!cache.get(setNum).get(k)[0][0].equals("-1")){
+							if(hex2decimal(cache.get(setNum).get(k)[0][0])==sortme.get(j)){
+								sorted.add(cache.get(setNum).get(k));
+							}	
+						}
+					}
+					
+				}
+				for(int j =0; j < sorted.size(); j++){
+					if(j>0){
+						System.out.print(", ");
+					}
+					
+					System.out.printf("%s(%s)",sorted.get(j)[0][0],sorted.get(j)[0][1]);
+				}
+				System.out.println();
+				//System.out.println("address	tag	set	h/m	hits	misses	accesses	miss ratio	tags");
+			}
 			
 		}
 	}
 	public void printEnd(){
-		System.out.println("Hits: "+Integer.toString(hits));
+		/**System.out.println("Hits: "+Integer.toString(hits));
 		System.out.println("Misses: "+Integer.toString(misses));
 	
 		System.out.println("Access Count: "+ Integer.toString(accessCount));
-		System.out.printf("Miss Ratio: %s\n",String.format("%.8g",missratio));
+		System.out.printf("Miss Ratio: %s\n",String.format("%.8g",missratio));**/
+		System.out.println("Kristin Dominique Mendoza");
+		System.out.println(Integer.toString(log2CacheSz)+ " "+Integer.toString(log2blockSz)+" "+Integer.toString(pval)+ " "+policy+" "+traceflag+" "+ filePath);
+		System.out.println("memory accesses: "+Integer.toString(accessCount));
+		System.out.println("hits: "+Integer.toString(hits));
+		System.out.println("misses: "+Integer.toString(misses));
+		System.out.println("miss ratio: "+String.format("%.8g",missratio));
 		
 	}
 	
@@ -343,7 +480,17 @@ public class Cache {
 		String[] ret= {Integer.toString(tagdec),Integer.toString(indexdec),Integer.toString(offsetdec)};
 		return ret;
 	}
-	
+	  public static int hex2decimal(String s) {
+	        String digits = "0123456789ABCDEF";
+	        s = s.toUpperCase();
+	        int val = 0;
+	        for (int i = 0; i < s.length(); i++) {
+	            char c = s.charAt(i);
+	            int d = digits.indexOf(c);
+	            val = 16*val + d;
+	        }
+	        return val;
+	    }
 	public void setDecimalValues(){
 		tagdec = Integer.parseInt(tagbinary,2);
 		if(indexSz!=0){

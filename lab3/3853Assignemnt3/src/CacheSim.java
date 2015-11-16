@@ -17,7 +17,7 @@ public class CacheSim {
 	public static int cacheSzK;
 	public static int cacheSz;
 	public static int blockSz;
-	public boolean trace;
+	public static boolean trace;
 	public static int tagSz;
 	public static int indexSz;
 	public static int offsetSz;
@@ -67,6 +67,7 @@ public class CacheSim {
 		hits = 0;
 		filePath = fp;
 		traceflag = tf;
+		
 		out = false;
 		last = 0;
 		currlast = 0;
@@ -125,21 +126,11 @@ public class CacheSim {
 			DMC dmc = new DMC(log2CacheSize,log2blockSize,tf,fp);
 		}else {
 
-			Cache lru = new Cache(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
-			/**if((p<0) ||(p>chkFulAssoc) ){
-				FAC fac = new FAC(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
-			}else{
-			
-
-					Cache lru = new Cache(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
-				
-
-			
-			}**/
+			Cache cache = new Cache(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
 			
 		}
 		
-		this.printTest();
+//	this.printTest();
 		
 	}
 	
@@ -347,6 +338,9 @@ public class CacheSim {
 	
 	public static int getBlockSize(){
 		return blockSz;
+	}
+	public static boolean getTrace(){
+		return trace;
 	}
 	
 }

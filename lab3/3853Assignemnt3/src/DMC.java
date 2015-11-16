@@ -46,9 +46,11 @@ public class DMC {
 	public String indexhex ;
 	public int last;
 	public String offsethex ;
+	public ArrayList<String[][]>addedTags;
 
 //	public String everything;
 	public DMC(int log2CacheSize, int log2blockSize, String tf, String fp){
+		addedTags=new ArrayList<String[][]>();
 		tagBinaryList = new ArrayList<String>();
 		indexBinaryList = new ArrayList<String>();
 		offsetBinaryList = new ArrayList<String>();
@@ -123,7 +125,10 @@ public class DMC {
 		String ADDR = "ADDR";
 		String TAG = "TAG";
 		if(trace == true){
-			System.out.println("ADDR    TAG    BLK    CTAG    VAL    HITS    MISSES    ACCESS    MISSRATIO");
+			
+				System.out.println("address	tag	set	h/m	hits	misses	accesses	miss ratio	tags");
+			
+			//System.out.println("ADDR    TAG    BLK    CTAG    VAL    HITS    MISSES    ACCESS    MISSRATIO");
 
 		}
 		
@@ -136,7 +141,7 @@ public class DMC {
 		for(int i = 0; i < data.length; i ++){
 			str = data[i].toCharArray();
 		
-			
+			String time = Integer.toString(i+1);
 			
 			//convert hex string to binary string of length 32
 			String bin=Integer.toBinaryString(Integer.parseInt(data[i], 16));
@@ -194,10 +199,17 @@ public class DMC {
 			missratio = ((double)misses/(i+1));
 			
 			if(trace){
-				System.out.printf("%s",data[i]);
+				System.out.printf("%4s",data[i]);
 				System.out.printf("%6s",taghex);
-				System.out.printf("%7s",indexhex);
-				try{
+				System.out.printf("%8d",indexdec+1);
+				if(hm){
+					System.out.printf("%8s","HIT");
+				}else{
+					System.out.printf("%8s","MISS");
+				}
+				//System.out.printf("%8s",indexhex);
+			
+				/**try{
 					if(!cache[indexdec][0].equals("-1")){
 						System.out.printf("%8s",cache[indexdec][0]);
 					}else{
@@ -207,17 +219,17 @@ public class DMC {
 				}catch(ArrayIndexOutOfBoundsException e){
 					System.out.printf("        ");
 
-				}
-				if(hm){
-					System.out.printf("    HIT");
-				}else{
-					System.out.printf("   MISS");
-				}
+				}**/
+				
 
-				System.out.printf("%8d",hits);
+				System.out.printf("%9d",hits);
 				System.out.printf("%10d",misses);
 				System.out.printf("%10d",i+1);
-				System.out.printf("%13s",String.format("%.8g",missratio));
+				System.out.printf("%18s",String.format("%.8g",missratio));
+				System.out.print("      ");
+				if(!cache[indexdec][1].equals("-1")){
+					System.out.printf("%s(%s)",cache[indexdec][0],cache[indexdec][1]);
+				}
 				System.out.println();
 			}
 			
@@ -225,7 +237,7 @@ public class DMC {
 		try{
 
 			cache[indexdec][0]= taghex;
-			
+			cache[indexdec][1]= time;
 			if(indexdec>last ){
 				last = indexdec;
 				//System.out.println("Index dec"+ Integer.toString(indexdec)+ "last: "+ Integer.toString(last));
@@ -251,6 +263,7 @@ public class DMC {
 			cache = tmpcache;
 			//set appropriate tag 
 			cache[indexdec][0]= taghex;
+			cache[indexdec][1]= time;
 		}
 		
 		
@@ -259,7 +272,7 @@ public class DMC {
 		
 		
 		System.out.println("Kristin Dominique Mendoza");
-		System.out.println(Integer.toString(log2CacheSize)+ " "+Integer.toString(log2blockSize)+" "+ traceflag+" "+ filePath);
+		System.out.println(Integer.toString(log2CacheSize)+ " "+Integer.toString(log2blockSize)+" "+Integer.toString(0)+ " "+CacheSim.getPolicy()+" "+traceflag+" "+ filePath);
 		System.out.println("memory accesses: "+Integer.toString(accessCount));
 		System.out.println("hits: "+Integer.toString(hits));
 		System.out.println("misses: "+Integer.toString(misses));
