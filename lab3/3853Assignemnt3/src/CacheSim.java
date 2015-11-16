@@ -121,19 +121,36 @@ public class CacheSim {
 				setTotal=blockCount;
 				indexSz=0;
 		
-				FAC fac = new FAC(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
+				///FAC fac = new FAC(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
 			}else{
 				
 				this.setSetCount();
 				this.setIndexSize();
 				
 			
-				SAC sac = new SAC(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
+				//SAC sac = new SAC(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
 			
 			}
 			//this.printTest();
 		}
 		this.setTagSize();
+		
+		if(p==0){
+			DMC dmc = new DMC(log2CacheSize,log2blockSize,tf,fp);
+		}else {
+
+			
+			if((p<0) ||(p>chkFulAssoc) ){
+				FAC fac = new FAC(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
+			}else{
+				
+
+				SAC sac = new SAC(log2CacheSize, log2blockSize,p,policy,  tf,  fp);
+			
+			}
+			
+		}
+		
 		this.printTest();
 		
 	}
