@@ -13,11 +13,13 @@ class Database {
 		if (!isset (self::$db) || self::$db == null) {
 			try {
 				if ($configPath == null)
-			   	 /**$configPath = dirname(__FILE__).DIRECTORY_SEPARATOR."..". 
+			   /** $configPath = dirname(__FILE__).DIRECTORY_SEPARATOR."..". 
 				             DIRECTORY_SEPARATOR. ".." . DIRECTORY_SEPARATOR.
 					           ".." . DIRECTORY_SEPARATOR . "myConfig.ini";**/
-				$configPath = DIRECTORY_SEPARATOR.'opt'.
-						DIRECTORY_SEPARATOR.'lampp'. DIRECTORY_SEPARATOR.'myConfig.ini';
+					$configPath= DIRECTORY_SEPARATOR."Applications". 
+				             DIRECTORY_SEPARATOR. "XAMPP".DIRECTORY_SEPARATOR."myConfig.ini";
+				/**$configPath = DIRECTORY_SEPARATOR.'opt'.
+						DIRECTORY_SEPARATOR.'lampp'. DIRECTORY_SEPARATOR.'myConfig.ini';**/
 				$passArray = parse_ini_file($configPath);
 				//echo 'Pass array<br>'.$passArray;
 				$username = $passArray["username"];
