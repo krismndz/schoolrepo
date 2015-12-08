@@ -1,0 +1,3 @@
+RewriteEngine on
+ 
+FallbackResource /mk_project/index.php

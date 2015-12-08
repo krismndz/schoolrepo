@@ -1,0 +1,23 @@
+EMAIL_INVALID Tu Correo Electronico es Invalido
+FIRST_NAME_EMPTY Su nombre no puede estar vacio o solo contienen espacios en blanco
+FIRST_NAME_HAS_INVALID_CHARS Su nombre contiene caracteres no validos
+LAST_NAME_EMPTY Su apellido no puede estar vacio o solo contienen espacios en blanco
+LAST_NAME_HAS_INVALID_CHARS Su apellido contiene caracteres no validos
+LAST_NAME_TOO_SHORT Su apellido es demasiado corto
+EMAIL_EMPTY Debe ingresar su direccion de e -mail
+EMAIL_INVALID_CHARS Tu direccion de correo tiene caracteres no validos 
+BDAY_EMPTY Usted debe proporcionar su mes de cumpleanos
+GENDER_EMPTY Debe especificar su sexo
+PNUM_EMPTY Debe proporcionar un numero de telefono
+PNUM_TOO_SHORT Su numero de telefono debe ser de al menos 10 digitos
+STATUS_EMPTY Usted debe indicar cual es su condicion de estudiante es
+USER_ROLE_EMPTY Usted debe indicar una funcion deseada
+USER_NAME_EMPTY Tu nombre de usuario no puede estar vacio o solo contienen espacios en blanco
+USER_NAME_HAS_INVALID_CHARS Tu nombre de usuario solo puede contener letras, numeros , guiones y guiones bajos
+PASSWORD_EMPTY La contrasena no puede estar vacia o espacios en blanco unicamente
+PASSWORD_CONFIRM_EMPTY Debe confirmar su contrasena
+PASSWORD_NOT_MATCH 	Tus contrasenas no coinciden
+SKILL_EMPTY Usted debe auto identificar su nivel de habilidad
+COLOR_EMPTY Debe especificar un color para errores
+COLOR_DEFAULT No se puede especificar negro como su color de
+PROBLEM_EMPTY Debe ingresar un problema

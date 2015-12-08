@@ -1,0 +1,21 @@
+@CHARSET "ISO-8859-1";
+
+.glyphicon-search {
+    font-size: 150px;
+    color: Turquoise;
+}
+
+.glyphicon-apple {
+    font-size: 150px;
+    color: red;
+}
+
+.glyphicon-usd {
+    font-size: 150px;
+    color:forestgreen;
+}
+
+.glyphicon-play {
+    font-size: 150px;
+    color:darkblue;
+}

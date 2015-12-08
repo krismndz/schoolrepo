@@ -1,0 +1,18 @@
+
+
+.fixed-nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 50px;
+  background-color: #00a087;
+}
+
+.navbar-static-top {
+	border-width: 0 0 1px;
+	z-index: 1000;
+ 
+}
+
